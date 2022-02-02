@@ -20,15 +20,16 @@ const row = (bill) => {
     `)
   }
 
-const rows = (data) => {
+const sortedData = (data) => {
+  const myAntiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
+  const myDatesSorted = data.slice().sort(myAntiChrono)
+  return myDatesSorted
+}
 
-  const antiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
-  const datesSorted = data.sort(antiChrono)
-  //  console.log(datesSorted)
-  return (datesSorted && datesSorted.length) ? datesSorted.map(bill => row(bill)).join("") : ""
-  
-  
-  
+
+const rows = (data)  => {
+  const myAntiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
+  return (data && data.length) ? data.slice().sort(myAntiChrono).map(bill => row(bill)).join("") : ""
 }
 
 export default ({ data: bills, loading, error }) => {
