@@ -20,6 +20,48 @@ export default class NewBill {
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
+
+
+    // verification MIME type of the file ======================
+
+    let fileReader = new FileReader()
+    fileReader.onloadend = function(e) {
+      let arr = (new Uint8Array(e.target.result)).subarray(0, 4)
+      let header = ""
+      let type
+      for(let i = 0; i < arr.length; i++) {
+         header += arr[i].toString(16)
+      }
+      switch (header) {
+        case "89504e47":
+            type = "image/png"
+            break;
+        case "ffd8ffe0":
+        case "ffd8ffe1":
+        case "ffd8ffe2":
+        case "ffd8ffe3":
+        case "ffd8ffe8":
+            type = "image/jpeg"
+            break;
+        default:
+            type = "unknown"
+            break;
+      }
+
+      if (type != 'image/jpeg' && type != 'image/png') {
+        document.querySelector(`input[data-testid="file"]`).value = ''
+        alert("invalid Image")
+      }
+    }
+
+
+    fileReader.readAsArrayBuffer(file)
+
+      //=========================================================
+
+
+
+
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
     formData.append('file', file)
