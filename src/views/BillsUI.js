@@ -26,11 +26,12 @@ const sortedData = (data) => {
   return myDatesSorted
 }
 
-
+// changes here ->
 const rows = (data)  => {
   const myAntiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
   return (data && data.length) ? data.slice().sort(myAntiChrono).map(bill => row(bill)).join("") : ""
 }
+//----------------
 
 export default ({ data: bills, loading, error }) => {
   

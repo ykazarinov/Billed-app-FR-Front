@@ -65,17 +65,25 @@ export const getStatus = (index) => {
   }
 }
 
+
 export default class {
   constructor({ document, onNavigate, store, bills, localStorage }) {
     this.document = document
     this.onNavigate = onNavigate
     this.store = store
+
     $('#arrow-icon1').click((e) => this.handleShowTickets(e, bills, 1))
     $('#arrow-icon2').click((e) => this.handleShowTickets(e, bills, 2))
     $('#arrow-icon3').click((e) => this.handleShowTickets(e, bills, 3))
+
     this.getBillsAllUsers()
     new Logout({ localStorage, onNavigate })
+
+    this.temp = 0
+
   }
+
+
 
   handleClickIconEye = () => {
     const billUrl = $('#icon-eye-d').attr("data-bill-url")
@@ -85,9 +93,15 @@ export default class {
   }
 
   handleEditTicket(e, bill, bills) {
-    if (this.counter === undefined || this.id !== bill.id) this.counter = 0
-    if (this.id === undefined || this.id !== bill.id) this.id = bill.id
+    if (this.counter === undefined || this.id !== bill.id) {
+      // console.log('1')
+      this.counter = 0}
+    if (this.id === undefined || this.id !== bill.id) {
+      // console.log('2')
+      this.id = bill.id}
+      // console.log('% = '+ this.counter)
     if (this.counter % 2 === 0) {
+      // console.log(this.id)
       bills.forEach(b => {
         $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
       })
@@ -96,6 +110,7 @@ export default class {
       $('.vertical-navbar').css({ height: '150vh' })
       this.counter ++
     } else {
+      // console.log(this.id)
       $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' })
 
       $('.dashboard-right-container div').html(`
@@ -130,8 +145,18 @@ export default class {
   }
 
   handleShowTickets(e, bills, index) {
+
+    // changes here ->
+    bills.forEach(bill => {
+      $(`#open-bill${bill.id}`).unbind('click');
+    })
+    //----------------
+
     if (this.counter === undefined || this.index !== index) this.counter = 0
-    if (this.index === undefined || this.index !== index) this.index = index
+    if (this.index === undefined || this.index !== index) {
+      this.index = index
+      // this.counter = 0
+    }
     if (this.counter % 2 === 0) {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})
       $(`#status-bills-container${this.index}`)
@@ -144,9 +169,14 @@ export default class {
       this.counter ++
     }
 
-    bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
-    })
+      bills.forEach(bill => {
+
+          $(`#open-bill${bill.id}`).click('click.mynamespace', (e) => {
+            console.log(e)
+            this.handleEditTicket(e, bill, bills)
+          })
+          
+      })
 
     return bills
 

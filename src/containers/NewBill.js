@@ -22,6 +22,7 @@ export default class NewBill {
     const fileName = filePath[filePath.length-1]
 
 
+    // changes here ->
     // verification MIME type of the file ======================
 
     let fileReader = new FileReader()

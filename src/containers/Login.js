@@ -37,6 +37,7 @@ export default class Login {
     
   }
 
+  // changes here ->
   handleSubmitAdmin = e =>  {
     e.preventDefault()
     const user =  {
@@ -57,6 +58,7 @@ export default class Login {
         document.body.style.backgroundColor="#fff"
       })
   }
+  //--------------
 
   // not need to cover this function by tests
   login = (user) => {
