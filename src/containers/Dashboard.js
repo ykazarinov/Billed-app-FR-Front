@@ -148,7 +148,7 @@ export default class {
 
     // changes here ->
     bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).unbind('click');
+      $(`#open-bill${bill.id}`).off('click');
     })
     //----------------
 

@@ -20,11 +20,7 @@ const row = (bill) => {
     `)
   }
 
-const sortedData = (data) => {
-  const myAntiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
-  const myDatesSorted = data.slice().sort(myAntiChrono)
-  return myDatesSorted
-}
+
 
 // changes here ->
 const rows = (data)  => {
@@ -36,7 +32,7 @@ const rows = (data)  => {
 export default ({ data: bills, loading, error }) => {
   
   const modal = () => (`
-    <div class="modal fade" id="modaleFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="modaleFile" data-testid="modaleFileEmploee" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
