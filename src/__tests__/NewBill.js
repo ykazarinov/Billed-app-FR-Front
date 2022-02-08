@@ -15,8 +15,6 @@
  import NewBill from "../containers/NewBill.js"
  import { ROUTES, ROUTES_PATH } from "../constants/routes"
 
- import store from "../__mocks__/store"
-
 describe("Given I am connected as an employee and i'm on the page 'New Bill'", () => {
   describe("When I do not fill fields and I click on envoyer button", () => {
     test("It should not navigate to another page", () => {
@@ -75,44 +73,58 @@ describe("Given I am connected as an employee and i'm on the page 'New Bill'", (
     })
   })
 
-  describe("When I select the file", () => {
-    test("Function handleChangeFile should be called", async () => {
-      
-      const html = NewBillUI()
-      document.body.innerHTML = html
+  beforeEach(()=>{
+    const html = NewBillUI()
+    document.body.innerHTML = html
+  })
 
-      const onNavigate = (pathname) => {
+  describe("When I select the file", () => {
+    test("And the file is wrong, then function handleChangeFile should be called and the file is not upload", async () => {
+       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
       }
-      // const store = null
+      const store = null
       const myNewBill = new NewBill({
         document, onNavigate, store, localStorage: window.localStorage
       })
-
-
-      const obj = {hello: 'world'};
-      const blob = new Blob([JSON.stringify(obj, null, 2)], {type : 'application/json'});
-
-
-      const file = new File([blob], 'file.json', { type: 'application/json' });
+      const blob = new Blob(['text'], {type : 'image/txt'});
+      const file = new File([blob], 'file.txt', { type: 'image/txt' });
       const inputFile = screen.getByTestId('file' );
       const handleChangeFile = jest.fn((e) => myNewBill.handleChangeFile(e))
       inputFile.addEventListener('change', handleChangeFile)
-     
       fireEvent.change(inputFile, {
         target: {
           files: [file]
         },
       })
-
-      // let image = document.getElementById("file");
-
+      const pauseFor = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+      await pauseFor(100);
       expect(handleChangeFile).toHaveBeenCalled()
-     
+      expect(myNewBill.type).toBe("unknown")
+    })
 
+    test("if the file was PNG, the file should upload", async () => {
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+      const store = null
+      const myNewBill = new NewBill({
+        document, onNavigate, store, localStorage: window.localStorage
+      })
+      let obj = new Uint8Array([137, 80, 78, 71]); // magic byte for PNG (89 50 4E 47) in decimal number system
+      const blob = new Blob([obj], {type : 'image/png'});
+      const file = new File([blob], 'file.png', { type: 'image/png' });
+      const inputFile = screen.getByTestId('file' );
+      const handleChangeFile = jest.fn((e) => myNewBill.handleChangeFile(e))
+      inputFile.addEventListener('change', handleChangeFile)
+      fireEvent.change(inputFile, {
+        target: {
+          files: [file]
+        },
+      })
+      const pauseFor = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+      await pauseFor(100);
+      expect(myNewBill.type).toBe("image/png")
     })
   })
-
-
-
 })

@@ -16,11 +16,12 @@ export default class NewBill {
     this.fileName = null
     this.billId = null
     new Logout({ document, localStorage, onNavigate })
+    this.type = ''
   }
   handleChangeFile = (e) => {
     e.preventDefault()
     
- 
+    
       const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
       const filePath = e.target.value.split(/\\/g)
       const fileName = filePath[filePath.length-1]
@@ -33,6 +34,7 @@ export default class NewBill {
     // verification MIME type of the file ======================
 
     let fileReader = new FileReader()
+    let that = this
     fileReader.onloadend = function(e) {
       let arr = (new Uint8Array(e.target.result)).subarray(0, 4)
       let header = ""
@@ -58,7 +60,13 @@ export default class NewBill {
 
       if (type != 'image/jpeg' && type != 'image/png') {
         document.querySelector(`input[data-testid="file"]`).value = ''
-        alert("invalid Image")
+        // alert("invalid Image")
+        // console.log(type)
+        that.type = type
+        console.log(this.type)
+      }else{
+        that.type = type
+        console.log(this.type)
       }
     }
 
@@ -75,20 +83,24 @@ export default class NewBill {
     formData.append('file', file)
     formData.append('email', email)
 
-    // this.store
-    //   .bills()
-    //   .create({
-    //     data: formData,
-    //     headers: {
-    //       noContentType: true
-    //     }
-    //   })
-    //   .then(({fileUrl, key}) => {
-    //     console.log(fileUrl)
-    //     this.billId = key
-    //     this.fileUrl = fileUrl
-    //     this.fileName = fileName
-    //   }).catch(error => console.error(error))
+    if(this.store){
+      this.store
+      .bills()
+      .create({
+        data: formData,
+        headers: {
+          noContentType: true
+        }
+      })
+      .then(({fileUrl, key}) => {
+        // console.log(fileUrl)
+        this.billId = key
+        this.fileUrl = fileUrl
+        this.fileName = fileName
+      }).catch(error => console.error(error))
+    }
+    
+    
   }
   handleSubmit = e => {
     e.preventDefault()
