@@ -15,7 +15,7 @@
  import NewBill from "../containers/NewBill.js"
  import { ROUTES, ROUTES_PATH } from "../constants/routes"
 
-
+ import store from "../__mocks__/store"
 
 describe("Given I am connected as an employee and i'm on the page 'New Bill'", () => {
   describe("When I do not fill fields and I click on envoyer button", () => {
@@ -84,40 +84,30 @@ describe("Given I am connected as an employee and i'm on the page 'New Bill'", (
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
       }
-      const store = null
+      // const store = null
       const myNewBill = new NewBill({
         document, onNavigate, store, localStorage: window.localStorage
       })
 
 
-      const str = JSON.stringify('derwer');
-      const blob = new Blob([str]);
+      const obj = {hello: 'world'};
+      const blob = new Blob([JSON.stringify(obj, null, 2)], {type : 'application/json'});
 
 
-      const file = new File([blob], 'values.json', {
-        type: 'application/JSON',
-      });
-      File.prototype.text = jest.fn().mockResolvedValueOnce(str);
-      let filePath = '/'
-      let fileName = 'file.xml'
-
+      const file = new File([blob], 'file.json', { type: 'application/json' });
       const inputFile = screen.getByTestId('file' );
-      const handleChangeFile = jest.fn((e) => myNewBill.handleChangeFile(e, file, filePath, fileName))
-
-      inputFile.addEventListener("upload", handleChangeFile);
-      // fireEvent.upload(inputFile, file);
-
+      const handleChangeFile = jest.fn((e) => myNewBill.handleChangeFile(e))
+      inputFile.addEventListener('change', handleChangeFile)
+     
       fireEvent.change(inputFile, {
         target: {
-          file,
+          files: [file]
         },
       })
 
-      let image = document.getElementById("file");
+      // let image = document.getElementById("file");
 
-      // inputFile.addEventListener('upload')
-
-      
+      expect(handleChangeFile).toHaveBeenCalled()
      
 
     })
