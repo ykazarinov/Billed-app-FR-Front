@@ -2,17 +2,116 @@
  * @jest-environment jsdom
  */
 
-import { screen } from "@testing-library/dom"
-import NewBillUI from "../views/NewBillUI.js"
-import NewBill from "../containers/NewBill.js"
+
+ import '@testing-library/jest-dom'
+ import BillsUI from "../views/BillsUI.js"
+
+ import { bills } from "../fixtures/bills.js"
+ import userEvent from '@testing-library/user-event'
+ import Bills from "../containers/Bills.js"
+ import { localStorageMock } from "../__mocks__/localStorage.js"
+ import { fireEvent, getByTestId, screen } from "@testing-library/dom"
+ import NewBillUI from "../views/NewBillUI.js"
+ import NewBill from "../containers/NewBill.js"
+ import { ROUTES, ROUTES_PATH } from "../constants/routes"
+
+ const bill = {
+  "id": "47qAXb6fIm2zOKkLzMro",
+  "vat": "80",
+  "fileUrl": "https://test.storage.tld/v0/b/billable-677b6.a…f-1.jpg?alt=media&token=c1640e12-a24b-4b11-ae52-529112e9602a",
+  "status": "accepted",
+  "type": "Hôtel et logement",
+  "commentAdmin": "ok",
+  "commentary": "séminaire billed",
+  "name": "encore",
+  "fileName": "preview-facture-free-201801-pdf-1.jpg",
+  "date": "2004-04-04",
+  "amount": 400,
+  "email": "a@a",
+  "pct": 20
+}
 
 
-describe("Given I am connected as an employee", () => {
-  describe("When I am on NewBill Page", () => {
-    test("Then ...", () => {
-      const html = NewBillUI()
+describe("Given I am connected as an employee and i'm on the page 'New Bill'", () => {
+  describe("When I do not fill fields and I click on envoyer button", () => {
+    test("It should not navigate to another page", () => {
+
+      const pathname = ROUTES_PATH['NewBill']
+      const html = ROUTES({
+        pathname
+       })
+       document.body.innerHTML = html
+       expect(screen.getAllByText('Envoyer une note de frais')).toBeTruthy()
+
+
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
       document.body.innerHTML = html
-      //to-do write assertion
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+       const store = null
+
+
+      expect(screen.getByTestId("form-new-bill")).toBeTruthy();
+
+      const inputDate = screen.getByTestId("datepicker");
+      // fireEvent.change(inputDate, { target: { value: "2022-02-22" } });
+      expect(inputDate.value).toBe("");
+
+      const inputAmount = screen.getByTestId("amount");
+      fireEvent.change(inputAmount, { target: { value: "654" } });
+      expect(inputAmount.value).toBe("654");
+
+      const inputVat = screen.getByTestId("vat");
+      expect(inputVat.value).toBe("");
+
+      const inputPct = screen.getByTestId("pct");
+      expect(inputPct.value).toBe("");
+
+      const inputFile = screen.getByTestId("file");
+      expect(inputFile.value).toBe("");
+
+    const myNewBill = new NewBill({
+      document, onNavigate, store, localStorage: window.localStorage
+    })
+
+    const handleSubmit = jest.fn((e) => myNewBill.handleSubmit(e))
+ 
+    const form = screen.getByTestId("form-new-bill");
+    form.addEventListener("submit", handleSubmit);
+    fireEvent.submit(form);
+
+    expect(handleSubmit).toHaveBeenCalled()
+    expect(screen.getByText("Mes notes de frais")).toBeTruthy();
+
     })
   })
+
+  describe("When I select the wrong file", () => {
+    test("File field value must be empty", () => {
+     
+    //   const html = NewBillUI(bill)
+    //   document.body.innerHTML = html
+
+    //   const onNavigate = (pathname) => {
+    //     document.body.innerHTML = ROUTES({ pathname })
+    //   }
+    //   const store = null
+    //   const myNewBill = new NewBill({
+    //     document, onNavigate, store, localStorage: window.localStorage
+    //   })
+    
+    // const filePath = bill.fileUrl
+    // const fileName = bill.fileName
+
+    // const handleSubmit = jest.fn((e) => myNewBill.handleSubmit(e))
+
+    })
+  })
+
+
+
 })

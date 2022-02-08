@@ -58,6 +58,8 @@ export default class Login {
         document.body.style.backgroundColor="#fff"
       })
   }
+
+   /* istanbul ignore next */ 
   //--------------
 
   // not need to cover this function by tests
