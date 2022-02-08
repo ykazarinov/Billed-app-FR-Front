@@ -1,6 +1,8 @@
 import { ROUTES_PATH } from '../constants/routes.js'
 import Logout from "./Logout.js"
 
+
+
 export default class NewBill {
   constructor({ document, onNavigate, store, localStorage }) {
     this.document = document
@@ -15,11 +17,16 @@ export default class NewBill {
     this.billId = null
     new Logout({ document, localStorage, onNavigate })
   }
-  handleChangeFile = e => {
+  handleChangeFile = (e, file, filePath, fileName) => {
     e.preventDefault()
-    const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
-    const filePath = e.target.value.split(/\\/g)
-    const fileName = filePath[filePath.length-1]
+    
+    if(file  == undefined){
+      file = this.document.querySelector(`input[data-testid="file"]`).files[0]
+      filePath = e.target.value.split(/\\/g)
+      fileName = filePath[filePath.length-1]
+    }
+   
+
 
 
     // changes here ->

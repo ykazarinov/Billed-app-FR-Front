@@ -15,21 +15,6 @@
  import NewBill from "../containers/NewBill.js"
  import { ROUTES, ROUTES_PATH } from "../constants/routes"
 
- const bill = {
-  "id": "47qAXb6fIm2zOKkLzMro",
-  "vat": "80",
-  "fileUrl": "https://test.storage.tld/v0/b/billable-677b6.a…f-1.jpg?alt=media&token=c1640e12-a24b-4b11-ae52-529112e9602a",
-  "status": "accepted",
-  "type": "Hôtel et logement",
-  "commentAdmin": "ok",
-  "commentary": "séminaire billed",
-  "name": "encore",
-  "fileName": "preview-facture-free-201801-pdf-1.jpg",
-  "date": "2004-04-04",
-  "amount": 400,
-  "email": "a@a",
-  "pct": 20
-}
 
 
 describe("Given I am connected as an employee and i'm on the page 'New Bill'", () => {
@@ -91,23 +76,49 @@ describe("Given I am connected as an employee and i'm on the page 'New Bill'", (
   })
 
   describe("When I select the wrong file", () => {
-    test("File field value must be empty", () => {
+    test("File field value must be empty", async () => {
+      
+      const html = NewBillUI()
+      document.body.innerHTML = html
+
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+      const store = null
+      const myNewBill = new NewBill({
+        document, onNavigate, store, localStorage: window.localStorage
+      })
+
+
+      const str = JSON.stringify('derwer');
+      const blob = new Blob([str]);
+
+
+      const file = new File([blob], 'values.json', {
+        type: 'application/JSON',
+      });
+      File.prototype.text = jest.fn().mockResolvedValueOnce(str);
+      let filePath = '/'
+      let fileName = 'file.xml'
+
+      const inputFile = screen.getByTestId('file' );
+      const handleChangeFile = jest.fn((e) => myNewBill.handleChangeFile(e, file, filePath, fileName))
+
+      inputFile.addEventListener("upload", handleChangeFile);
+      // fireEvent.upload(inputFile, file);
+
+      fireEvent.change(inputFile, {
+        target: {
+          file,
+        },
+      })
+
+      let image = document.getElementById("file");
+
+      // inputFile.addEventListener('upload')
+
+      
      
-    //   const html = NewBillUI(bill)
-    //   document.body.innerHTML = html
-
-    //   const onNavigate = (pathname) => {
-    //     document.body.innerHTML = ROUTES({ pathname })
-    //   }
-    //   const store = null
-    //   const myNewBill = new NewBill({
-    //     document, onNavigate, store, localStorage: window.localStorage
-    //   })
-    
-    // const filePath = bill.fileUrl
-    // const fileName = bill.fileName
-
-    // const handleSubmit = jest.fn((e) => myNewBill.handleSubmit(e))
 
     })
   })
