@@ -75,8 +75,8 @@ describe("Given I am connected as an employee and i'm on the page 'New Bill'", (
     })
   })
 
-  describe("When I select the wrong file", () => {
-    test("File field value must be empty", async () => {
+  describe("When I select the file", () => {
+    test("Function handleChangeFile should be called", async () => {
       
       const html = NewBillUI()
       document.body.innerHTML = html
