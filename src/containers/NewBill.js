@@ -83,7 +83,7 @@ export default class NewBill {
     formData.append('file', file)
     formData.append('email', email)
 
-    if(this.store){
+    // if(this.store){
       this.store
       .bills()
       .create({
@@ -98,7 +98,7 @@ export default class NewBill {
         this.fileUrl = fileUrl
         this.fileName = fileName
       }).catch(error => console.error(error))
-    }
+    // }
     
     
   }

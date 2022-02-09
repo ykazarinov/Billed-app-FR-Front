@@ -4,16 +4,14 @@
 
 
  import '@testing-library/jest-dom'
- import BillsUI from "../views/BillsUI.js"
 
- import { bills } from "../fixtures/bills.js"
- import userEvent from '@testing-library/user-event'
- import Bills from "../containers/Bills.js"
  import { localStorageMock } from "../__mocks__/localStorage.js"
  import { fireEvent, getByTestId, screen } from "@testing-library/dom"
  import NewBillUI from "../views/NewBillUI.js"
  import NewBill from "../containers/NewBill.js"
  import { ROUTES, ROUTES_PATH } from "../constants/routes"
+
+import {Store, ApiMock} from '../__mocks__/store2.js'
 
 describe("Given I am connected as an employee and i'm on the page 'New Bill'", () => {
   describe("When I do not fill fields and I click on envoyer button", () => {
@@ -83,7 +81,10 @@ describe("Given I am connected as an employee and i'm on the page 'New Bill'", (
        const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
       }
-      const store = null
+
+      let store = new Store()
+
+      // const store = null
       const myNewBill = new NewBill({
         document, onNavigate, store, localStorage: window.localStorage
       })
@@ -107,7 +108,7 @@ describe("Given I am connected as an employee and i'm on the page 'New Bill'", (
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
       }
-      const store = null
+      let store = new Store()
       const myNewBill = new NewBill({
         document, onNavigate, store, localStorage: window.localStorage
       })
