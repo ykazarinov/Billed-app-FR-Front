@@ -11,7 +11,11 @@
  import NewBill from "../containers/NewBill.js"
  import { ROUTES, ROUTES_PATH } from "../constants/routes"
 
-import {Store, ApiMock} from '../__mocks__/store2.js'
+import  {Store, ApiMock} from '../__mocks__/store2.js'
+
+import  store from '../__mocks__/store3.js'
+
+
 
 describe("Given I am connected as an employee and i'm on the page 'New Bill'", () => {
   describe("When I do not fill fields and I click on envoyer button", () => {
@@ -126,6 +130,22 @@ describe("Given I am connected as an employee and i'm on the page 'New Bill'", (
       const pauseFor = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
       await pauseFor(100);
       expect(myNewBill.type).toBe("image/png")
+    })
+
+
+
+
+  })
+})
+
+// test d'intégration POST
+describe("Given I am a user connected as Employee", () => {
+  describe("When I navigate to page 'Envoyer une note de frais'", () => {
+    test("fetches bills from mock API POST", async () => {
+       const getSpy = jest.spyOn(store, "post")
+       const bills = await store.post()
+       expect(getSpy).toHaveBeenCalledTimes(1)
+       expect(bills.data.length).toBe(4)
     })
   })
 })

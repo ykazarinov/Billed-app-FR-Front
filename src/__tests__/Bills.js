@@ -6,17 +6,15 @@ import '@testing-library/jest-dom'
 import BillsUI from "../views/BillsUI.js"
 
 import {getByRole, getByTestId} from '@testing-library/dom'
-import { screen } from "@testing-library/dom"
-
-// import VerticalLayout from './VerticalLayout.js'
-import { bills } from "../fixtures/bills.js"
-
-import userEvent from '@testing-library/user-event'
 
 import Bills from "../containers/Bills.js"
 
-import { localStorageMock } from "../__mocks__/localStorage.js"
+import { fireEvent, screen } from "@testing-library/dom"
+import userEvent from '@testing-library/user-event'
 import { ROUTES } from "../constants/routes"
+import { localStorageMock } from "../__mocks__/localStorage.js"
+import store from "../__mocks__/store"
+import { bills } from "../fixtures/bills"
  
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
@@ -102,4 +100,35 @@ describe("Given I am connected as an employee", () => {
       
     })
   })
-})  
+})
+
+// test d'intégration GET
+describe("Given I am a user connected as Employee", () => {
+  describe("When I navigate to page 'Mes notes de frais'", () => {
+    test("fetches bills from mock API GET", async () => {
+       const getSpy = jest.spyOn(store, "get")
+       const bills = await store.get()
+       expect(getSpy).toHaveBeenCalledTimes(1)
+       expect(bills.data.length).toBe(4)
+    })
+    test("fetches bills from an API and fails with 404 message error", async () => {
+      store.get.mockImplementationOnce(() =>
+        Promise.reject(new Error("Erreur 404"))
+      )
+      const html = BillsUI({ error: "Erreur 404" })
+      document.body.innerHTML = html
+      const message = await screen.getByText(/Erreur 404/)
+      expect(message).toBeTruthy()
+    })
+    test("fetches messages from an API and fails with 500 message error", async () => {
+      store.get.mockImplementationOnce(() =>
+        Promise.reject(new Error("Erreur 500"))
+      )
+      const html = BillsUI({ error: "Erreur 500" })
+      document.body.innerHTML = html
+      const message = await screen.getByText(/Erreur 500/)
+      expect(message).toBeTruthy()
+    })
+  })
+})
+

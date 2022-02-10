@@ -4,7 +4,15 @@ export class Store {
     }
   }
 
+  // export default {
+  //   get: () => {
+  //     return Promise.resolve({})
+  //   }
+  // }
+
 export class ApiMock {
+
+
     create(){
       return Promise.resolve({
         data: [{
