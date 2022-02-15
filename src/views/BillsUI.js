@@ -24,24 +24,18 @@ const row = (bill) => {
 
 // changes here ->
 const rows = (data)  => {
-  // const myAntiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
-  //  let MONTHS = { Jan: 1, Fév: 2, Mar: 3, Avr: 4, Mai: 5, Jui: 6, Jui: 7, Aoû: 8, Sep: 9, Oct: 10, Nov: 11, Déc: 12 };
-    
-
-  //  var array = ["1-jun-15", "1-feb-15", "1-apr-15", "1-may-15", "1-jan-15", "1-mar-15"];
-
-   var months = [
+    let months = [
      "Jan.", "Fév.","Mar.","Avr.","Mai.","Jui.","Jui.","Aoû.","Sep.","Oct.","Nov.", "Déc."
-   ];
+    ]
    
-   function parse(date) {
-       var parts = date.split(' ');
-       return new Date('20'+parts[2], months.indexOf(parts[1]), parts[0]);
-   }
+    function parse(date) {
+      let parts = date.split(' ')
+      return new Date('20'+parts[2], months.indexOf(parts[1]), parts[0])
+    }
    
    const myAntiChrono = function(a, b) {
        return parse(a.date).getTime() - parse(b.date).getTime();
-   };
+   }
 
 return (data && data.length) ? data.slice().sort(myAntiChrono).map(bill => row(bill)).join("") : ""
  
