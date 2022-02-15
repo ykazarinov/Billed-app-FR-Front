@@ -40,7 +40,21 @@ describe("Given I am connected as an employee", () => {
       document.body.innerHTML = html
 
       const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML)
-      const antiChrono = (a, b) => ((a < b) ? 1 : -1)
+      // const antiChrono = (a, b) => ((a < b) ? 1 : -1)
+
+      var months = [
+        "Jan.", "Fév.","Mar.","Avr.","Mai.","Jui.","Jui.","Aoû.","Sep.","Oct.","Nov.", "Déc."
+      ];
+
+      function parse(date) {
+        var parts = date.split(' ');
+        return new Date('20'+parts[2], months.indexOf(parts[1]), parts[0]);
+    }
+
+    const antiChrono = function(a, b) {
+      return parse(a).getTime() - parse(b).getTime();
+    };
+
       const datesSorted = [...dates].sort(antiChrono)
       expect(dates).toEqual(datesSorted)
     })
