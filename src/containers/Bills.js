@@ -40,9 +40,11 @@ export default class {
         const bills = snapshot
           .map(doc => {
             try {
+              
               return {
                 ...doc,
-                date: formatDate(doc.date),
+                //  date: formatDate(doc.date),
+                date: doc.date,
                 status: formatStatus(doc.status)
               }
             } catch(e) {

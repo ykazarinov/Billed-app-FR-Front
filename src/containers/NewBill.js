@@ -60,7 +60,7 @@ export default class NewBill {
 
       if (type != 'image/jpeg' && type != 'image/png') {
         document.querySelector(`input[data-testid="file"]`).value = ''
-        // alert("invalid Image")
+         alert("invalid Image")
         // console.log(type)
         that.type = type
         console.log(this.type)

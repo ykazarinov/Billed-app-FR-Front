@@ -4,13 +4,15 @@ import LoadingPage from "./LoadingPage.js"
 
 import Actions from './Actions.js'
 
+import { formatDate} from "../app/format.js"
+
 const row = (bill) => {
   // console.log(bill)
   return (`
     <tr>
       <td>${bill.type}</td>
       <td>${bill.name}</td>
-      <td>${bill.date}</td>
+      <td>${formatDate(bill.date)}</td>
       <td>${bill.amount} €</td>
       <td>${bill.status}</td>
       <td>
@@ -25,7 +27,12 @@ const row = (bill) => {
 // changes here ->
 const rows = (data)  => {
   const myAntiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
-  return (data && data.length) ? data.slice().sort(myAntiChrono).map(bill => row(bill)).join("") : ""
+  //  const myAntiChrono2 = (a, b) => ((a.date2 < b.date2) ? 1 : -1)
+  //  console.log(data.slice().sort(myAntiChrono))
+    
+   return (data && data.length) ? data.slice().sort(myAntiChrono).map(bill => row(bill)).join("") : ""
+
+  //  return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
 }
 //----------------
 
